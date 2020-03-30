@@ -1,4 +1,4 @@
-import cryptoJs from 'crypto-js';
+const cryptoJs = require('crypto-js');
 
 const md5x2 = (value) => {
     return md5(md5(value));
@@ -38,7 +38,7 @@ const encrypt = (value, publicKey, privateKey) => {
     ).toString();
 };
 
-export default {
+module.exports = {
     md5x2,
     md5,
     decrypt,
