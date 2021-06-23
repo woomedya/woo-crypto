@@ -1,4 +1,8 @@
 const cryptoJs = require('crypto-js');
+const crypto = require('crypto');
+
+let tokenGenerator = null;
+
 
 const md5x2 = (value) => {
     return md5(md5(value));
@@ -38,9 +42,47 @@ const encrypt = (value, publicKey, privateKey) => {
     ).toString();
 };
 
+const generatePublicPrivate = async (primeLength) => {
+    var diffHell = crypto.createDiffieHellman(primeLength || 128);
+
+    diffHell.generateKeys('base64');
+
+    return {
+        publicKey: diffHell.getPublicKey('hex'),
+        privateKey: diffHell.getPrivateKey('hex')
+    }
+}
+
+const createTokenGenerator = ({ salt, timestampMap, hashLength }) => {
+    tokenGenerator = require('token-generator')({
+        salt,
+        timestampMap,
+        hashLength: hashLength || 30
+    });
+}
+
+const generateToken = () => {
+    return tokenGenerator.generate();
+}
+
+const validateToken = (token) => {
+    return tokenGenerator.isValid(token);
+}
+
+const activationCode = (primeLength) => {
+    var diffHell = crypto.createDiffieHellman(primeLength || 32);
+    diffHell.generateKeys('base64');
+    return diffHell.getPublicKey('hex');
+}
+
 module.exports = {
     md5x2,
     md5,
     decrypt,
     encrypt,
+    generatePublicPrivate,
+    createTokenGenerator,
+    generateToken,
+    validateToken,
+    activationCode
 };
