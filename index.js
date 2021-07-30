@@ -57,25 +57,6 @@ const validateToken = (token) => {
     return tokenGenerator.isValid(token);
 }
 
-const generatePublicPrivate = async (primeLength) => {
-    let crypto = require('crypto');
-    var diffHell = crypto.createDiffieHellman(primeLength || 128);
-
-    diffHell.generateKeys('base64');
-
-    return {
-        publicKey: diffHell.getPublicKey('hex'),
-        privateKey: diffHell.getPrivateKey('hex')
-    }
-}
-
-const activationCode = (primeLength) => {
-    let crypto = require('crypto');
-    var diffHell = crypto.createDiffieHellman(primeLength || 32);
-    diffHell.generateKeys('base64');
-    return diffHell.getPublicKey('hex');
-}
-
 module.exports = {
     md5x2,
     md5,
@@ -83,7 +64,5 @@ module.exports = {
     encrypt,
     createTokenGenerator,
     generateToken,
-    validateToken,
-    generatePublicPrivate,
-    activationCode
+    validateToken
 };
